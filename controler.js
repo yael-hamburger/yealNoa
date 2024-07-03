@@ -1,48 +1,46 @@
-// קובץ: controller.js
+// userController.js
+const userModule = require('./userModule'); // ייבוא הפונקציות מהממודול
 
-// קבלת דפים
-function getPage(req, res) {
-    // לוגיקה לקבלת דף מהשרת או ממסד נתונים
-    res.send('היי, זהו דף ראשי!');
+// פונקציה ליצירת משתמש
+function createUser(req, res) {
+  const { name, email, phone } = req.body;
+
+  const user = userModule.createUser(name, email, phone);
+  res.status(201).json(user);
 }
 
-// יצירת פוסט
-function createPost(req, res) {
-    // לוגיקה ליצירת פוסט במסד נתונים או בשרת
-    res.send('פוסט נוצר בהצלחה!');
+// פונקציה לעדכון משתמש
+function updateUser(req, res) {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  const user = userModule.updateUser(Number(id), name, email, phone);
+  if (user) {
+    res.status(200).json(user);
+  } 
 }
 
-// עדכון פוסט
-function updatePost(req, res) {
-    // לוגיקה לעדכון פוסט קיים
-    res.send('הפוסט עודכן בהצלחה!');
+// פונקציה למחיקת משתמש
+function deleteUser(req, res) {
+  const { id } = req.params;
+  const user = userModule.deleteUser(Number(id));
+  if (user) {
+    res.status(200).json(user);
+  } 
 }
 
-// מחיקת פוסט
-function deletePost(req, ress) {
-    // לוגיקה למחיקת פוסט קיים
-    ress.send('הפוסט נמחק בהצלחה!');
+// פונקציה לקבלת משתמש לפי ID
+function getUserById(req, res) {
+  const { id } = req.params;
+  const user = userModule.getUserById(Number(id));
+  if (user) {
+    res.status(200).json(user);
+  } 
 }
 
-// קריאת פוסט מסוים
-function getPost(req, res) {
-    // לוגיקה לקבלת פוסט מסוים לפי מזהה
-    const postId = req.params.id;
-    res.send(`הפוסט עם המזהה ${postId}`);
-}
-
-// קריאת רשימת פוסטים
-function getAllPosts(req, res) {
-    // לוגיקה לקבלת רשימת פוסטים
-    res.send('רשימת כל הפוסטים');
-}
-
-// ייצוא הפונקציות לשימוש במקומות אחרים
+// ייצוא הפונקציות לשימוש בקובץ הראוטר
 module.exports = {
-    getPage,
-    createPost,
-    updatePost,
-    deletePost,
-    getPost,
-    getAllPosts
+  createUser,
+  updateUser,
+  deleteUser,
+  getUserById
 };
